@@ -1,0 +1,30 @@
+services:
+  gree-local:
+    image: ${GREE_IMAGE:-ghcr.io/chicco-carone/gree-local-cloud:latest}
+    restart: unless-stopped
+    environment:
+      GREE_SERVER_IP: ${GREE_SERVER_IP:?Set GREE_SERVER_IP to this Docker host's LAN IP}
+      GREE_DEVICE_IP: ${GREE_DEVICE_IP:?Set GREE_DEVICE_IP to the AC's LAN IP}
+      GREE_MODULE_MAC: ${GREE_MODULE_MAC:?Set GREE_MODULE_MAC to the Wi-Fi module ID}
+      GREE_UNIT_MAC: ${GREE_UNIT_MAC:?Set GREE_UNIT_MAC to the indoor unit ID}
+      GREE_NAME: ${GREE_NAME:-Gree AC}
+      GREE_MODEL: ${GREE_MODEL:-U-WB04BRT13}
+      GREE_LISTEN_PORT: ${GREE_LISTEN_PORT:-1982}
+      GREE_POLL_INTERVAL: ${GREE_POLL_INTERVAL:-20}
+      GREE_DNS_NAMES: ${GREE_DNS_NAMES:-eu.dis.gree.com,mqtt-eu.gree.com}
+      MQTT_HOST: ${MQTT_HOST:?Set MQTT_HOST to your MQTT broker hostname or IP}
+      MQTT_PORT: ${MQTT_PORT:-1883}
+      MQTT_USERNAME: ${MQTT_USERNAME:-}
+      MQTT_PASSWORD: ${MQTT_PASSWORD:-}
+      MQTT_TLS: ${MQTT_TLS:-false}
+      HA_DISCOVERY: ${HA_DISCOVERY:-true}
+      LANGUAGE: ${LANGUAGE:-en}
+      TEMPERATURE_TOPIC: ${TEMPERATURE_TOPIC:-}
+      TZ: ${TZ:-UTC}
+    ports:
+      - "${GREE_BIND_IP:-0.0.0.0}:1053:1053/udp"
+      - "${GREE_BIND_IP:-0.0.0.0}:1813:1813/tcp"
+      - "${GREE_BIND_IP:-0.0.0.0}:${GREE_LISTEN_PORT:-1982}:${GREE_LISTEN_PORT:-1982}/tcp"
+    volumes:
+      - ./data:/data
+    user: "${GREE_UID:-1000}:${GREE_GID:-1000}"

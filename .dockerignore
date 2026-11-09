@@ -1,0 +1,10 @@
+**
+!Dockerfile
+!pyproject.toml
+!uv.lock
+!src/
+!src/**
+!certs/
+!certs/*.pem
+**/__pycache__/
+**/*.pyc

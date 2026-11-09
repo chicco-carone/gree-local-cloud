@@ -1,0 +1,10 @@
+.private/
+captures/
+.venv/
+__pycache__/
+*.pyc
+data/
+secrets/
+.env
+.pytest_cache/
+.ruff_cache/

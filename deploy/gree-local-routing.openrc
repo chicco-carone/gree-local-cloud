@@ -1,0 +1,22 @@
+#!/sbin/openrc-run
+
+description="Maintain device-specific Gree local routing rules"
+supervisor="supervise-daemon"
+command="/bin/sh"
+command_args="/data/gree-local/router-watch.sh"
+respawn_delay=3
+respawn_max=0
+
+depend() {
+    need net
+    after firewall
+}
+
+start_pre() {
+    for file in routing.env router-rules.sh router-watch.sh; do
+        if [ ! -r "/data/gree-local/$file" ]; then
+            eerror "Missing /data/gree-local/$file"
+            return 1
+        fi
+    done
+}

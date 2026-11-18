@@ -59,13 +59,6 @@ For file-based passwords, `MQTT_PASSWORD_FILE` takes precedence over `MQTT_PASSW
 
 The image is published at [`ghcr.io/chicco-carone/gree-local-cloud`](https://github.com/chicco-carone/gree-local-cloud/pkgs/container/gree-local-cloud). The image is public; no Docker login is required to pull it. The published image currently supports `linux/amd64`; no native ARM64 image is published.
 
-The bind-mounted `data/` directory must be writable by `GREE_UID:GREE_GID` (default `1000:1000`). The image’s directory ownership does not change the ownership of the host directory. On Linux, set these values in `.env` to the output of `id -u` and `id -g` for the user that created `data/`, or assign the directory to your chosen container UID/GID:
-
-```sh
-# Example for the default container UID/GID:
-sudo chown -R 1000:1000 data
-```
-
 Start the server before redirecting any traffic:
 
 ```sh

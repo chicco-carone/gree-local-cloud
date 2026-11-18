@@ -34,8 +34,6 @@ First, [find your AC’s IP, module ID, unit ID, and firmware](docs/device-info.
 
 Edit `.env` with your Docker host IP (`GREE_SERVER_IP`), AC IP (`GREE_DEVICE_IP`), module/unit IDs (`GREE_MODULE_MAC` / `GREE_UNIT_MAC`, without colons), and MQTT broker credentials. Verify the unit ID rather than assuming the module ID plus `00`.
 
-Ensure `data/` is writable by the container user. On Linux, set `GREE_UID` and `GREE_GID` in `.env` to the output of `id -u` and `id -g` for the user that created `data/`. See the [data-directory permissions guidance](docs/reference.md#configure-and-start) if using a different owner.
-
 Optional: set `HA_DISCOVERY=false` for standalone MQTT without Home Assistant, `LANGUAGE=it` or `LANGUAGE=en` for Italian or English swing menus, or `TEMPERATURE_TOPIC` for an external sensor’s numeric Celsius reading.
 
 ```sh

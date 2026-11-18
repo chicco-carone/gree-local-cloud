@@ -57,7 +57,14 @@ Certificates are included in the image, and runtime data is stored in `/data`. A
 
 For file-based passwords, `MQTT_PASSWORD_FILE` takes precedence over `MQTT_PASSWORD`; mount the file read-only and pass its container path using a Compose override. A custom broker CA is supported via `MQTT_CA_FILE`; mount that file too. Neither setting is required for a basic username/password connection. Device-side MQTT credentials are generated internally and are separate from your broker credentials.
 
-The image is published at [`ghcr.io/chicco-carone/gree-local-cloud`](https://github.com/chicco-carone/gree-local-cloud/pkgs/container/gree-local-cloud). While the repository and package are private, you need access and an authenticated Docker login to GHCR to pull it.
+The image is published at [`ghcr.io/chicco-carone/gree-local-cloud`](https://github.com/chicco-carone/gree-local-cloud/pkgs/container/gree-local-cloud). The image is public; no Docker login is required to pull it. The published image currently supports `linux/amd64`; no native ARM64 image is published.
+
+The bind-mounted `data/` directory must be writable by `GREE_UID:GREE_GID` (default `1000:1000`). The image’s directory ownership does not change the ownership of the host directory. On Linux, set these values in `.env` to the output of `id -u` and `id -g` for the user that created `data/`, or assign the directory to your chosen container UID/GID:
+
+```sh
+# Example for the default container UID/GID:
+sudo chown -R 1000:1000 data
+```
 
 Start the server before redirecting any traffic:
 
@@ -121,7 +128,7 @@ Supported command fields and values:
 
 Subscribe to `gree_local/<unit_mac>/#` in any MQTT client to inspect state and command confirmations. Use a broker account with read access to command topics and your optional temperature topic, and write access to the bridge’s topics. When discovery is enabled, also allow writes under `homeassistant/` and reads of `homeassistant/status`.
 
-`MQTT_CLIENT_ID` can override the default `gree-local-<unit_mac>` identifier; every running instance needs a unique client ID. Broker connections automatically reconnect and resubscribe.
+`MQTT_CLIENT_ID` can override the default `gree-local-<unit_mac>` identifier; add it to the service’s `environment` section using a Compose override, since the supplied Compose file does not forward it from `.env`. Every running instance needs a unique client ID. Broker connections automatically reconnect and resubscribe.
 
 To use an external room sensor, set `TEMPERATURE_TOPIC` to a topic with plain numeric Celsius payloads, preferably retained so the reading is available on reconnect. JSON sensor payloads require a separate MQTT transformation. There is no HA entity lookup.
 

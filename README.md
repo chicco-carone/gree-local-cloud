@@ -1,6 +1,6 @@
 # Gree Local Cloud
 
-Control compatible Gree air conditioners locally over MQTT, with optional Home Assistant discovery. This works on stock gree firmware and requires an account just to connect the AC to the local network.
+Control compatible Gree air conditioners locally over MQTT, with optional Home Assistant discovery. This works on stock Gree firmware and requires an account just to connect the AC to the local network.
 
 ## Tested hardware
 
@@ -21,7 +21,7 @@ Other modules and firmware are unverified. If your AC supports the standard Gree
 
 ## Setup
 
-You need Docker Compose, an MQTT broker, stable AC/server IPs, and a router supporting device-specific destination NAT and firewall rules.
+You need a Linux amd64 Docker host (the published image currently targets `linux/amd64`), Docker Compose, an MQTT broker, stable AC/server IPs, and a router supporting device-specific destination NAT and firewall rules.
 
 ```sh
 git clone https://github.com/chicco-carone/gree-local-cloud.git
@@ -34,6 +34,8 @@ First, [find your AC’s IP, module ID, unit ID, and firmware](docs/device-info.
 
 Edit `.env` with your Docker host IP (`GREE_SERVER_IP`), AC IP (`GREE_DEVICE_IP`), module/unit IDs (`GREE_MODULE_MAC` / `GREE_UNIT_MAC`, without colons), and MQTT broker credentials. Verify the unit ID rather than assuming the module ID plus `00`.
 
+Ensure `data/` is writable by the container user. On Linux, set `GREE_UID` and `GREE_GID` in `.env` to the output of `id -u` and `id -g` for the user that created `data/`. See the [data-directory permissions guidance](docs/reference.md#configure-and-start) if using a different owner.
+
 Optional: set `HA_DISCOVERY=false` for standalone MQTT without Home Assistant, `LANGUAGE=it` or `LANGUAGE=en` for Italian or English swing menus, or `TEMPERATURE_TOPIC` for an external sensor’s numeric Celsius reading.
 
 ```sh
@@ -41,7 +43,7 @@ docker compose pull
 docker compose up -d
 ```
 
-Image: `ghcr.io/chicco-carone/gree-local-cloud:latest`. Private packages require an authenticated GHCR login.
+Image: `ghcr.io/chicco-carone/gree-local-cloud:latest` is public; no Docker login is required to pull it.
 
 Then configure your router:
 
